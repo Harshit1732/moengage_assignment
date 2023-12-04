@@ -40,7 +40,7 @@ const login = async (req, res) => {
         } else if (result) {
           jwt.sign(
             { userID: data[0]._id },
-            process.env.secreatkey,
+            process.env.JWT_SECERT,
             (err, token) => {
               res.status(200).send({
                 msg: "User login Successfully",

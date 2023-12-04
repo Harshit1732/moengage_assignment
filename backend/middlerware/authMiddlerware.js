@@ -9,7 +9,7 @@ dotenv.config()
         console.log("d",decoded)
         if(decoded){
             const userID = decoded.userID;
-            req.body.userID = userID;
+            req._id = userID;
             next();
         }
         else{

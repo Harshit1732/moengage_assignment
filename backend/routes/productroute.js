@@ -1,11 +1,12 @@
 const express = require("express");
 
 
-const {addReview}= require('../controller/productController')
+const {addReview, getProductReviews}= require('../controller/productController')
+const {auth}= require('../middlerware/authMiddlerware')
 
 const router = express.Router();
 
-router.post('/addreview/:id', addReview);
-
+router.post('/addreview/:id',auth, addReview);
+router.get('/getReview/:id',auth, getProductReviews);
 
 module.exports = router;
