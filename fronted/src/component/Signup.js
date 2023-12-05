@@ -1,28 +1,38 @@
-import React, { useState, use} from "react";
+import React, { useState } from "react";
 import "./Signup.css";
 import axios from "axios";
- 
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
-  const [username, setUsername] = useState("");
+  const [name, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSignup = async (e) => {
-//  try{
-//     await axios.post("http://localhost:5000/auth/signup", {
-//       name,
-//       email,
-//       password,
-//     });
-
-// }catch(e){
-
-// }
     e.preventDefault();
-    console.log("Username:", username);
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      await axios
+        .post("http://localhost:5000/auth/signup", {
+          name,
+          email,
+          password,
+        })
+        .then((res) => {
+          // console.log(res.status,"res........................................")
+          if (res.status == 200) {
+            navigate("/login");
+          } else {
+            console.log("Error while signing up");
+          }
+        });
+    } catch (e) {}
+
+    console.log(e);
+    // console.log("Username:", username);
+    // console.log("Email:", email);
+    // console.log("Password:", password);
   };
 
   return (
@@ -32,7 +42,7 @@ const SignupPage = () => {
         <input
           type="text"
           placeholder="Username"
-          value={username}
+          value={name}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input

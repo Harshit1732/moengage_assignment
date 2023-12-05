@@ -15,14 +15,24 @@ const HomePage = ({ handleSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleSearch(searchTerm);
+    console.log(searchTerm);
+    getAllBreweries();
+    // console.log(e.target.value);
+    // setSearchTerm(e.target.value);
   };
 
   const getAllBreweries = async () => {
     try {
-      const response = await axios.get(
-        "https://api.openbrewerydb.org/v1/breweries"
-      );
+      let url = "https://api.openbrewerydb.org/v1/breweries";
+      console.log(searchTerm);
+      if (searchTerm) {
+        url += `?${encodeURIComponent("by_city")}=${encodeURIComponent(
+          searchTerm
+        )}`;
+      }
+
+      const response = await axios.get(url);
+
       setResult(response.data);
     } catch (e) {
       console.error("Error fetching breweries:", e);
@@ -46,7 +56,7 @@ const HomePage = ({ handleSearch }) => {
         <button type="submit">Search</button>
       </form>
       <div>
-        {result.map((item,index) => (
+        {result.map((item, index) => (
           <BreweryCard
             key={index}
             data={{

@@ -1,21 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./BreweryCard.css";
 import { Link, useNavigate } from "react-router-dom";
 import Singlepage from "../pages/singlepage";
-
+import axios from "axios";
 const BreweryCard = (props) => {
-  console.log(props.data);
-  const { name, id, street, city, state, phone, website_url, rating } =
-    props.data;
-
+  // console.log(props.data);
+  const { name, id, street, city, state, phone, website_url } = props.data;
+  const [rating, setRating] = useState();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
-  //   console.log(name);
+  const getRating = async () => {
+    try {
+      await axios
+        .get(`http://localhost:5000/getReview/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          if (res.data == "product not found") {
+            setRating(null);
+          } else {
+            const reviews = res.data.review;
+            const ratings = reviews[reviews.length - 1].rating;
+            setRating(ratings);
+          }
+        });
+    } catch (e) {
+      console.log("error getting review");
+    }
+  };
+
+  useEffect(() => {
+    getRating();
+  }, []);
+  
 
   return (
     <div className="brewery-card">
       <Link to={`/brewery/${id}`}>
-      <h3>{name}</h3>
+        <h3>{name}</h3>
       </Link>
       <p>
         <strong>Address:</strong> {street}, {city}, {state}

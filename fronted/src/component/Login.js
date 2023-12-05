@@ -1,20 +1,28 @@
 import React, { useState } from "react";
 import "./Login.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate= useNavigate()
 
   const handleLogin = async (e) => {
+    e.preventDefault();
     await axios.post("http://localhost:5000/auth/login", {
       email,
       password,
+    }).then((res)=>{
+        console.log(res.data);
+        localStorage.setItem("token", res.data.token);
+        if (res.status == 200) {
+          navigate("/Home");
+        } else {
+          console.log("Error while Logging in");
+        }
     });
-
-    e.preventDefault();
-    console.log("Username:", username);
-    console.log("Password:", password);
+   
   };
 
   return (
